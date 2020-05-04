@@ -5,7 +5,7 @@ const app        = express();
 const Usuario = require('../models/usuario');
 
 app.get('/', (req, res) => {
-    res.json('hola Mundo LOCAL');
+    res.json('Welcome to my API RESTFULL with Nodejs');
 });
 
 app.get('/usuario', (req, res) => {
