@@ -8,12 +8,13 @@ const app        = express();
 //app.use es para asignar los middleware, es decir todas las peticiones que se realizan se ejecutaran los middleware
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
  
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.use( require('./routes/usuario') );
+// Configuración global de las rutas
+app.use( require('./routes/index') );
 
 mongoose.connect(config.db,
                 { 

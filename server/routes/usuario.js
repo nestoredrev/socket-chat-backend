@@ -1,6 +1,7 @@
 const express    = require('express');
 const bcrypt     = require('bcrypt');
 const _          = require('underscore'); // underscorejs  es una libreria de malipulacion de objetos y arrays
+const { verificaToken, verifica_AdminRole } = require('../middlewares/autentificacion');
 const app        = express();
 const Usuario = require('../models/usuario');
 
@@ -8,7 +9,7 @@ app.get('/', (req, res) => {
     res.json('Welcome to my API RESTFULL with Nodejs');
 });
 
-app.get('/usuario', (req, res) => {
+app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -31,30 +32,28 @@ app.get('/usuario', (req, res) => {
            .limit(limite)
            .exec( (err, usuarios) => {
 
-            if(err)
-            {
-                res.status(400).json({
-                    ok:false,
-                    error: err
-                });
-                return;
-            }
-            else
-            {
-                Usuario.countDocuments({estado: true}, (err, total) => {
-                    res.json({
-                        ok: true,
-                        usuarios,
-                        total: total
-                    });  
-                });
-            }
-
+                if(err)
+                {
+                    res.status(400).json({
+                        ok:false,
+                        error: err
+                    });
+                    return;
+                }
+                else
+                {
+                    Usuario.countDocuments({estado: true}, (err, total) => {
+                        res.json({
+                            ok: true,
+                            usuarios,
+                            total: total
+                        });  
+                    });
+                }
            })
-
 });
 
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [verificaToken, verifica_AdminRole], (req, res) => {
 
     let body = req.body;
 
@@ -84,15 +83,14 @@ app.post('/usuario', (req, res) => {
     });
 });
 
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [verificaToken, verifica_AdminRole], (req, res) => {
 
     let id = req.params.id;
     // pick devuelve una copia de las propiedades seleccionadas en el array
     // para excluir propiedades que no nos interesa por ejemplo la contraseña o el estado de google
     let body = _.pick(req.body,['nombre','email','img','rol','estado']);
-    console.log(body);
 
-
+    
     // new true nos devuelve el objeto del usuario modificado
     // runValidators true ejecuta las validaciones especificadas en el Schema del usuario
     // Por razones tecnicas al utilizar runValidators hay que añadir el context: 'query' segun el plugin mongoose-unique-validator
@@ -114,13 +112,11 @@ app.put('/usuario/:id', (req, res) => {
             });
         }
     });
-
-    
 });
 
 
 // Borrar fisicamente el usuario de la coleccion
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verifica_AdminRole], (req, res) => {
     
     let id = req.params.id;
     Usuario.findByIdAndRemove(id, (err, usuarioDeleted) => {
@@ -156,7 +152,7 @@ app.delete('/usuario/:id', (req, res) => {
     Cambiando el estado del usuario como eliminado sin borrarlo fisicamente
     pero recibiendo el id en el body
 */
-app.delete('/usuario', (req, res) => {
+app.delete('/usuario', [verificaToken, verifica_AdminRole], (req, res) => {
 
     let id = req.body.id;
 
@@ -178,9 +174,7 @@ app.delete('/usuario', (req, res) => {
         }
 
     });
-
-
-})
+});
 
 
 module.exports = app;

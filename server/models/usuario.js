@@ -23,7 +23,7 @@ const usuarioSchema = new Schema({
     password: {
         type: String,
         required: true,
-        select: false // select:false no devolver ese campo cuando solicitamos los datos de algun usuario
+        select: true // select:false no devolver ese campo cuando solicitamos los datos de algun usuario
     },
     img:{
         type: String
@@ -45,7 +45,7 @@ const usuarioSchema = new Schema({
 });
 
 
-// Una manera de eliminar el password del objeto de respuesta 
+//Una manera de eliminar el password del objeto de respuesta 
 usuarioSchema.methods.toJSON = function () {
     let user = this;
     let userObject = user.toObject();
