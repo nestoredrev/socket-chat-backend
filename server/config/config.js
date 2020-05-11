@@ -22,4 +22,3 @@ module.exports = {
 	seed: process.env.SEED || 'mi-semilla-seed-secreto-desarrollo',
 	expiracion_token: process.env.EXPIRACION_TOKEN || '30d'
 }
-
