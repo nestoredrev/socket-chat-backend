@@ -14,14 +14,13 @@ const Producto                              = require('../models/producto');
     por lo tanto hay que controlar el tamaño de archivo manualmente.
 */
 app.use( fileUpload({   useTempFiles: true, 
-                        tempFileDir: '/uploads/temp/',
+                        tempFileDir: path.resolve(__dirname, '/uploads/temp/'),
                         abortOnLimit: true,
                         responseOnLimit: 'Archivo demasiado grande',
                         limits: { fileSize: config.max_size_file,
                                   files: 10  // 10 Archivos como maximo
                                 }, 
                     }));
-
 
 app.post('/upload/:tipo/:id', function(req, res) {
 
