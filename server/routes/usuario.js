@@ -53,6 +53,7 @@ app.get('/usuario', verificaToken, (req, res) => {
            })
 });
 
+// SignUp normal de usuario en la bbdd
 app.post('/usuario', [verificaToken, verifica_AdminRole], (req, res) => {
 
     let body = req.body;

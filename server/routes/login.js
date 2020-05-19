@@ -65,11 +65,11 @@ app.post('/login', (req, res) => {
 async function verify( token ) {
 
     const payload =  await admin.auth().verifyIdToken(token);
-    
+    console.log(payload);
     return {
-        nombre: payload.name,
-        email: payload.email,
-        img: payload.picture,
+        nombre: payload.name || '',
+        email: payload.email || '',
+        img: payload.picture || '',
         google: true
     }
 }

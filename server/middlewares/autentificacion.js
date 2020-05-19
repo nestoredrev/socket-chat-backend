@@ -40,6 +40,30 @@ let verificaToken = (req, res, next) => {
     });
 }
 
+// Para proteger la url de la foto hay que enviar el Token de la session del usuario
+let verificaTokenImg = (req, res, next) => {
+
+    let token = req.query.token;
+
+    jwt.verify(token, config.seed, (err, decoded) => {
+        
+        if(err)
+        {
+            return res.status(401).json({
+                ok: false,
+                err: err
+            });
+        }
+        else
+        {
+            req.usuario = decoded.payloadUsuario;
+            next();
+        }
+
+    });
+}
+
+
 let verifica_AdminRole = (req, res, next) => {
     
     let rol = req.usuario.rol;
@@ -59,5 +83,6 @@ let verifica_AdminRole = (req, res, next) => {
 
 module.exports = {
     verificaToken,
+    verificaTokenImg,
     verifica_AdminRole
 }

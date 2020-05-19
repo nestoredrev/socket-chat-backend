@@ -15,6 +15,9 @@ const productoSchema = new Schema({
     descripcion: {
         type: String
     },
+    img: {
+        type: String
+    },
     estado: {
         type: Boolean,
         required: true,
