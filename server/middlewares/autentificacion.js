@@ -1,5 +1,4 @@
 const config     = require('../config/config');
-const bcrypt     = require('bcrypt');
 const jwt        = require('jsonwebtoken');
 
 let verificaToken = (req, res, next) => {

@@ -41,7 +41,10 @@ const usuarioSchema = new Schema({
     google:{
         type: Boolean,
         default: false
-    }
+    },
+    salas: [{
+        type:String
+    }]
 });
 
 

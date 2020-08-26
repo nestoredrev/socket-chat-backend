@@ -54,32 +54,66 @@ app.get('/usuario', verificaToken, (req, res) => {
 });
 
 // SignUp normal de usuario en la bbdd
-app.post('/usuario', [verificaToken, verifica_AdminRole], (req, res) => {
+app.post('/signup', (req, res) => {
 
     let body = req.body;
 
-    let usuario = new Usuario({
-        nombre:   body.nombre,
-        email:    body.email,
-        password: bcrypt.hashSync(body.password, 10),
-        img:      body.img,
-        rol:      body.rol 
-    });
+    Usuario.findOne({email: body.email}, (err, usarioFound) => {
 
-    usuario.save( (err, usuarioDB) => {
         if(err)
         {
-            res.status(400).json({
-                ok:false,
+            res.status(500).json({
+                ok: false,
                 error: err
             });
             return;
         }
         else
         {
-            res.status(200).json({
-                usuarioStored: usuarioDB
-            });
+            if(usarioFound)
+            {
+                res.status(400).json({
+                    ok: false,
+                    error: `El email ${body.email} ya existe`
+                });
+                return;
+            }
+            else
+            {
+                if(body.password === body.passwordRepeat)
+                {
+                    let usuario = new Usuario({
+                        nombre:   body.nombre,
+                        email:    body.email,
+                        password: bcrypt.hashSync(body.password, 10)
+                    });
+                
+                    usuario.save( (err, usuarioDB) => {
+                        if(err)
+                        {
+                            res.status(500).json({
+                                ok:false,
+                                error: err
+                            });
+                            return;
+                        }
+                        else
+                        {
+                            res.status(200).json({
+                                usuarioStored: usuarioDB
+                            });
+                        }
+                    });
+                }
+                else
+                {
+                    res.status(400).json({
+                        ok: false,
+                        error: `Las contraseñas no coinciden`
+                    });
+                    return;
+                }
+            }
         }
     });
 });

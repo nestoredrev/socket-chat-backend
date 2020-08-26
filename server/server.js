@@ -3,7 +3,14 @@ const express    = require('express');
 const mongoose   = require('mongoose');
 const bodyParser = require('body-parser');
 const path       = require('path');
+const cors       = require('cors');
+const socketIO   = require('socket.io');
+const http       = require('http');
 const app        = express();
+
+
+// socket.io utiliza el http de nodejs
+const server = http.createServer(app);
 
 
 //app.use es para asignar los middleware, es decir todas las peticiones que se realizan se ejecutaran los middleware
@@ -15,12 +22,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
+app.use(cors());
+
 // Habilitar la carpeta public
 app.use( express.static( path.resolve(__dirname, '../public') ) );
 
 
 // Configuración global de las rutas
 app.use( require('./routes/index') );
+
+
+module.exports.io = socketIO(server);
+
+// Utilizar el archivo socketjs en el server
+// Configuracion de socket.io en el Back-End
+require('./chatSockets/chat');
 
 
 
@@ -37,6 +53,6 @@ mongoose.connect(config.db,
     else console.log(`Base de datos ${res.name} online`);
 });
  
-app.listen(config.port, () => {
+server.listen(config.port, () => {
     console.log(`Escuchando en el puerto ${config.port}`);
 });

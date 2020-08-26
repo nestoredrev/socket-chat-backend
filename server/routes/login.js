@@ -34,7 +34,7 @@ app.post('/login', (req, res) => {
             {
                 res.status(400).json({
                     ok: false,
-                    error: `Usuario o contraseña incorrectos`
+                    error: `Usuario o contraseña incorrectos 111`
                 });
                 return;
             }
@@ -44,8 +44,9 @@ app.post('/login', (req, res) => {
                 {
                     res.status(400).json({
                         ok: false,
-                        error: `Usuario o contraseña incorrectos`
+                        error: `Usuario o contraseña incorrectos 222`
                     });
+                    return;
                 }
                 else
                 {

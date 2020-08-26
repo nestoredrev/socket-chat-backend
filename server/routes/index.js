@@ -7,5 +7,6 @@ app.use( require('./categoria') );
 app.use( require('./producto') );
 app.use( require('./upload') );
 app.use( require('./imagen') );
+app.use( require('./conversacion_privada') );
 
 module.exports = app;
